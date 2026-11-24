@@ -81,7 +81,7 @@ public sealed class Settings
     /// follows the same address (loopback when the server binds all
     /// interfaces).
     /// </summary>
-    public string ListenAddress { get; set; } = LlamaApp.Common.ListenAddresses.Localhost;
+    public string ListenAddress { get; set; } = "0.0.0.0";
 
     /// <summary>
     /// User opt-in to require the server API key even on a loopback bind (the
@@ -136,7 +136,7 @@ public sealed class Settings
     /// value takes effect on the next server start. An idled-out model stays
     /// listed and wakes transparently on the next request.
     /// </summary>
-    public int IdleUnloadSeconds { get; set; } = 300;
+    public int IdleUnloadSeconds { get; set; } = -1;
 
     /// <summary>
     /// Maximum number of models the llama server loads simultaneously in
@@ -158,14 +158,14 @@ public sealed class Settings
     /// fits in GPU memory. A changed value takes effect on the next server
     /// start.
     /// </summary>
-    public string CacheTypeK { get; set; } = "f16";
+    public string CacheTypeK { get; set; } = "q8_0";
 
     /// <summary>
     /// KV cache quantization type for the value tensor, handed to the server
     /// as <c>--cache-type-v</c> at launch. Same value set and default as
     /// <see cref="CacheTypeK"/>. K and V can be quantized independently.
     /// </summary>
-    public string CacheTypeV { get; set; } = "f16";
+    public string CacheTypeV { get; set; } = "q8_0";
 
     /// <summary>
     /// Free-form extra <c>llama serve</c> arguments, appended after the
@@ -176,7 +176,7 @@ public sealed class Settings
     /// next time the llama server starts; a bad flag makes the server exit
     /// with an error, which the app surfaces as the failure reason.
     /// </summary>
-    public string CustomServeArguments { get; set; } = "";
+    public string CustomServeArguments { get; set; } = "-fa on -t 8 -tb 16 -b 2048 -ub 512 -c 32768 --n-cpu-moe 18";
 
     /// <summary>
     /// Whether Llama should launch automatically when the user signs in to
@@ -185,7 +185,7 @@ public sealed class Settings
     /// folder); this value is a persisted hint so the Settings checkbox can
     /// reflect intent on first open before re-reading the OS state.
     /// </summary>
-    public bool LaunchAtStartup { get; set; } = false;
+    public bool LaunchAtStartup { get; set; } = true;
 
     /// <summary>
     /// Whether the one-time first-run hint ("Llama lives in the system

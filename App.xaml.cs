@@ -8,7 +8,6 @@ namespace LlamaApp
         private MainWindow? _window;
         private TrayIconManager? _trayIcon;
         private OverlayWindow? _overlay;
-        private GlobalHotkey? _hotkey;
         private Llama.RuntimeUpdateScheduler? _runtimeUpdates;
 
         /// <summary>
@@ -282,7 +281,6 @@ namespace LlamaApp
             // hotkey is registered for the app's lifetime only, so it stops
             // working the moment Llama exits.
             _overlay = new OverlayWindow();
-            _hotkey = new GlobalHotkey();
             // Initialize the overlay's WebView2 NOW — at a calm point in
             // startup, awaited and fully observed — rather than at the first
             // summon. The app runs x64-emulated on ARM64, and the first WebView2
@@ -293,16 +291,6 @@ namespace LlamaApp
             // nothing). Prewarmed, the first summon just navigates — and is
             // instant, too.
             _overlay.PrewarmWebView();
-            _hotkey.Register(() => _dispatcher.TryEnqueue(() => _overlay.Summon()));
-
-            // The hotkey is hard-coded and otherwise undiscoverable — say so
-            // when it can't work instead of the shortcut silently doing
-            // nothing (RegisterHotKey fails when another app owns Alt+Space).
-            if (!_hotkey.IsRegistered)
-            {
-                Notifications.Show("Alt+Space unavailable",
-                    "Another app is using the Alt+Space shortcut, so the chat overlay hotkey is off.");
-            }
 
             // One-time first-run hint: the app is tray-only (no window appears
             // on launch) and the overlay hotkey is undiscoverable — tell the
@@ -378,22 +366,8 @@ namespace LlamaApp
                 Common.Log.Warn(
                     $"listen address '{Settings.Current.ListenAddress}' is not assigned to this machine; using {resolvedListen.Address}");
 
-            // A key is required when the bind reaches beyond this machine
-            // (mandatory — the server would otherwise be an open control API
-            // on the network) or when the user opted in via Settings → Llama
-            // (defense in depth on loopback). Generated once and persisted,
-            // so an adopted server (and a later app start) agree.
+            // Never require an API key, even on non-loopback binds.
             string? apiKey = null;
-            if (Common.ServerAuth.IsApiKeyRequired(
-                    Settings.Current.RequireServerApiKey, resolvedListen.Address))
-            {
-                if (string.IsNullOrWhiteSpace(Settings.Current.ServerApiKey))
-                {
-                    Settings.Current.ServerApiKey = Common.ServerAuth.GenerateApiKey();
-                    Settings.Current.Save();
-                }
-                apiKey = Settings.Current.ServerApiKey;
-            }
             return new(serverPort, resolvedListen, apiKey);
         }
 

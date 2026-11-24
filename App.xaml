@@ -7,6 +7,7 @@
     xmlns:local="using:LlamaApp"
     xmlns:imaging="using:Microsoft.UI.Xaml.Media.Imaging"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    RequestedTheme="Dark"
     mc:Ignorable="d">
     <Application.Resources>
         <ResourceDictionary>
@@ -34,21 +35,104 @@
                                             UriSource="ms-appx:///Assets/llama-white.svg" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            <!-- Other app resources here -->
-            <Color x:Key="Primary">#512BD4</Color>
+            <!-- Core Dark Palette (from DarkTheme.xaml) -->
+            <Color x:Key="BgDeepColor">#0B0F17</Color>
+            <Color x:Key="BgSurfaceColor">#111827</Color>
+            <Color x:Key="BgElevatedColor">#182235</Color>
+            <Color x:Key="BgHoverColor">#22304A</Color>
+            <Color x:Key="BgInputColor">#0E1523</Color>
+            <Color x:Key="BorderSubtleColor">#26344D</Color>
+            <Color x:Key="BorderStrongColor">#384B6E</Color>
 
-            <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}" />
+            <Color x:Key="TextPrimaryColor">#F1F5F9</Color>
+            <Color x:Key="TextSecondaryColor">#94A3B8</Color>
+            <Color x:Key="TextMutedColor">#64748B</Color>
+
+            <Color x:Key="AccentCyanColor">#38BDF8</Color>
+            <Color x:Key="AccentVioletColor">#A78BFA</Color>
+            <Color x:Key="AccentEmeraldColor">#34D399</Color>
+            <Color x:Key="AccentAmberColor">#FBBF24</Color>
+            <Color x:Key="AccentRoseColor">#FB7185</Color>
+
+            <SolidColorBrush x:Key="BgDeepBrush" Color="{StaticResource BgDeepColor}" />
+            <SolidColorBrush x:Key="BgSurfaceBrush" Color="{StaticResource BgSurfaceColor}" />
+            <SolidColorBrush x:Key="BgElevatedBrush" Color="{StaticResource BgElevatedColor}" />
+            <SolidColorBrush x:Key="BgHoverBrush" Color="{StaticResource BgHoverColor}" />
+            <SolidColorBrush x:Key="BgInputBrush" Color="{StaticResource BgInputColor}" />
+            <SolidColorBrush x:Key="BorderSubtleBrush" Color="{StaticResource BorderSubtleColor}" />
+            <SolidColorBrush x:Key="BorderStrongBrush" Color="{StaticResource BorderStrongColor}" />
+
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
+            <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMutedColor}" />
+
+            <SolidColorBrush x:Key="AccentCyanBrush" Color="{StaticResource AccentCyanColor}" />
+            <SolidColorBrush x:Key="AccentVioletBrush" Color="{StaticResource AccentVioletColor}" />
+            <SolidColorBrush x:Key="AccentEmeraldBrush" Color="{StaticResource AccentEmeraldColor}" />
+            <SolidColorBrush x:Key="AccentAmberBrush" Color="{StaticResource AccentAmberColor}" />
+            <SolidColorBrush x:Key="AccentRoseBrush" Color="{StaticResource AccentRoseColor}" />
+
+            <!-- Override WinUI 3 theme brushes to match DarkTheme.xaml -->
+            <Color x:Key="Primary">#38BDF8</Color>
+            <Color x:Key="SystemAccentColor">#38BDF8</Color>
+            <Color x:Key="SystemAccentColorLight1">#38BDF8</Color>
+            <Color x:Key="SystemAccentColorLight2">#7DD3FC</Color>
+            <Color x:Key="SystemAccentColorLight3">#BAE6FD</Color>
+            <Color x:Key="SystemAccentColorDark1">#0EA5E9</Color>
+            <Color x:Key="SystemAccentColorDark2">#0E4A66</Color>
+
+            <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource AccentCyanColor}" />
             <SolidColorBrush x:Key="WhiteBrush" Color="White" />
             <SolidColorBrush x:Key="BlackBrush" Color="Black" />
+            <SolidColorBrush x:Key="BrandAccentBrush" Color="{StaticResource AccentCyanColor}" />
 
-            <!-- Brand accent (orange): the app's single accent color, used
-                 instead of the system accent for brand moments — settings
-                 icon tiles, nav selection pill, status dots. -->
-            <SolidColorBrush x:Key="BrandAccentBrush" Color="#FF8A3D" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="{StaticResource BgDeepColor}" />
+            <SolidColorBrush x:Key="SolidBackgroundFillColorBaseBrush" Color="{StaticResource BgDeepColor}" />
+            <SolidColorBrush x:Key="LayerFillColorDefaultBrush" Color="{StaticResource BgSurfaceColor}" />
+            <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="{StaticResource BgSurfaceColor}" />
+            <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="{StaticResource BorderSubtleColor}" />
+            <SolidColorBrush x:Key="DividerStrokeColorDefaultBrush" Color="{StaticResource BorderSubtleColor}" />
+            <SolidColorBrush x:Key="ControlStrokeColorDefaultBrush" Color="{StaticResource BorderSubtleColor}" />
+            <SolidColorBrush x:Key="ControlFillColorDefaultBrush" Color="{StaticResource BgElevatedColor}" />
+            <SolidColorBrush x:Key="ControlFillColorSecondaryBrush" Color="{StaticResource BgHoverColor}" />
+            <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush" Color="{StaticResource BgHoverColor}" />
+            <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush" Color="#1E3A5F" />
 
-            <!-- App background: dark gray instead of the default ~black (#202020). -->
-            <!-- Tune the hex: #282828 / #2D2D30 / #333333 are good dark-gray values. -->
-            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#2D2D30" />
+            <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
+            <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
+            <SolidColorBrush x:Key="TextFillColorTertiaryBrush" Color="{StaticResource TextMutedColor}" />
+
+            <!-- Buttons, Inputs, Popups, ToolTips -->
+            <SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource BgElevatedColor}" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource BgHoverColor}" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#1E3A5F" />
+            <SolidColorBrush x:Key="ButtonForeground" Color="{StaticResource TextPrimaryColor}" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource BorderSubtleColor}" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="{StaticResource BorderStrongColor}" />
+
+            <SolidColorBrush x:Key="TextControlBackground" Color="{StaticResource BgInputColor}" />
+            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="{StaticResource BgElevatedColor}" />
+            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{StaticResource BgInputColor}" />
+            <SolidColorBrush x:Key="TextControlForeground" Color="{StaticResource TextPrimaryColor}" />
+            <SolidColorBrush x:Key="TextControlBorderBrush" Color="{StaticResource BorderSubtleColor}" />
+            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="{StaticResource BorderStrongColor}" />
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource AccentCyanColor}" />
+
+            <SolidColorBrush x:Key="ComboBoxBackground" Color="{StaticResource BgInputColor}" />
+            <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="{StaticResource BgElevatedColor}" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="{StaticResource BorderSubtleColor}" />
+            <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver" Color="{StaticResource BorderStrongColor}" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{StaticResource BgSurfaceColor}" />
+            <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{StaticResource BorderStrongColor}" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="#1E3A5F" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="#163050" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="#1E4470" />
+
+            <SolidColorBrush x:Key="FlyoutPresenterBackground" Color="{StaticResource BgSurfaceColor}" />
+            <SolidColorBrush x:Key="FlyoutBorderThemeBrush" Color="{StaticResource BorderStrongColor}" />
+            <SolidColorBrush x:Key="ToolTipBackground" Color="#0E1525" />
+            <SolidColorBrush x:Key="ToolTipForeground" Color="{StaticResource TextPrimaryColor}" />
+            <SolidColorBrush x:Key="ToolTipBorderBrush" Color="{StaticResource BorderStrongColor}" />
 
             <x:Double x:Key="AppFontSize">14</x:Double>
 

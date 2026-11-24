@@ -36,6 +36,7 @@ internal sealed record ToastAction(string Label, params (string Key, string Valu
 internal static class Notifications
 {
     private static bool _registered;
+    private static int _nextAutoTag;
 
     /// <summary>
     /// Raised when the user activates a toast — body click or action button.
@@ -94,10 +95,12 @@ internal static class Notifications
     public static void ShowProgress(
         string tag, string title, string status, double? fraction,
         params ToastAction[] actions)
-        => ShowToast(title, status, tag, actions,
-            progressBar: new AppNotificationProgressBar()
-                .SetValue(fraction ?? 0)
-                .SetStatus(status));
+    {
+        var bar = new AppNotificationProgressBar().SetStatus(status);
+        if (fraction.HasValue)
+            bar = bar.SetValue(fraction.Value);
+        ShowToast(title, status, tag, actions, progressBar: bar);
+    }
 
     /// <summary>
     /// Dismisses the progress toast with this tag (e.g. when the download
@@ -139,25 +142,45 @@ internal static class Notifications
         if (!_registered) return;
         try
         {
-            var builder = new AppNotificationBuilder().AddText(title);
-            if (progressBar is not null)
-                builder = builder.AddProgressBar(progressBar);
-            else if (!string.IsNullOrEmpty(body))
-                builder = builder.AddText(body);
+            var isProgress = progressBar is not null;
+            var builder = new AppNotificationBuilder();
 
-            if (actions is { Length: > 0 })
-                foreach (var action in actions)
-                {
-                    var button = new AppNotificationButton(action.Label);
-                    foreach (var (key, value) in action.Arguments)
-                        button.AddArgument(key, value);
-                    builder = builder.AddButton(button);
-                }
+            if (isProgress)
+            {
+                builder = builder
+                    .AddText(title)
+                    .AddProgressBar(progressBar!)
+                    .SetDuration(AppNotificationDuration.Long);
+                if (actions is { Length: > 0 })
+                    foreach (var action in actions)
+                    {
+                        var button = new AppNotificationButton(action.Label);
+                        foreach (var (key, value) in action.Arguments)
+                            button.AddArgument(key, value);
+                        builder = builder.AddButton(button);
+                    }
+            }
+            else
+            {
+                // Compact one-liner, no buttons, auto-dismissed after 2 seconds.
+                var line = string.IsNullOrWhiteSpace(body) ? title : $"{title} — {body}";
+                builder = builder.AddText(line);
+            }
 
-            if (tag is not null)
-                builder = builder.SetTag(tag).SetGroup(ProgressGroup);
+            var effectiveTag = tag ?? (!isProgress ? $"auto-{Interlocked.Increment(ref _nextAutoTag)}" : null);
+            if (effectiveTag is not null)
+                builder = builder.SetTag(effectiveTag).SetGroup(ProgressGroup);
 
             AppNotificationManager.Default.Show(builder.BuildNotification());
+
+            if (!isProgress && effectiveTag is not null)
+            {
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(2000);
+                    Close(effectiveTag);
+                });
+            }
         }
         catch (Exception ex)
         {

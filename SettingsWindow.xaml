@@ -26,11 +26,7 @@
         pair, each card anchors its control to the bottom of the card so the
         two inputs line up no matter how long their descriptions wrap.
     -->
-    <Window.SystemBackdrop>
-        <MicaBackdrop Kind="Base" />
-    </Window.SystemBackdrop>
-
-    <Grid RowSpacing="0">
+    <Grid RowSpacing="0" Background="{StaticResource BgDeepBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" /> <!-- Custom titlebar (drag region) -->
             <RowDefinition Height="*" />    <!-- Body -->
@@ -85,10 +81,9 @@
                                      Color="Transparent" />
                     <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground"
                                      Color="Transparent" />
-                    <!-- Selection pill in the brand orange instead of the
-                         system accent, matching the flyout's wordmark. -->
+                    <!-- Selection pill in the theme cyan accent -->
                     <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground"
-                                     Color="#FF8A3D" />
+                                     Color="{StaticResource AccentCyanColor}" />
                 </NavigationView.Resources>
                 <NavigationView.MenuItems>
                     <NavigationViewItem Content="General"

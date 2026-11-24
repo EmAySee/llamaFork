@@ -161,6 +161,7 @@ namespace LlamaApp.Views
         // watch's lifetime: started when a row enters the downloading state,
         // canceled when it leaves it. All access happens on the UI thread.
         private readonly Dictionary<ModelItem, CancellationTokenSource> _externalDownloadWatches = new();
+        private readonly Dictionary<string, long> _loadToastStartMs = new(StringComparer.OrdinalIgnoreCase);
 
         // Hub-search bookkeeping. _hubSearchId makes stale search responses
         // (an earlier query landing after a newer one) discardable; _hubSuggestId
@@ -2140,17 +2141,32 @@ namespace LlamaApp.Views
             var queue = DispatcherQueue;
 
             item.LoadFraction = 0;
+            var serverId = ((IModel)item).ServerModelId;
+            var loadTag = "load:" + serverId;
+            var loadStartMs = Environment.TickCount64;
+            _loadToastStartMs[serverId] = loadStartMs;
+            Notifications.ShowProgress(loadTag, $"Loading {item.DisplayName}", "0%", 0);
+
             // Progress<T> captures the UI thread's SynchronizationContext at
             // construction, so reports land on the UI thread unaided. Throttle
             // to ~10 updates/sec like the download ring (the server can stream
             // a status_change per mmap chunk); the terminal 100% always lands.
             long lastApplyMs = 0;
+            long lastToastMs = loadStartMs;
             var progress = new Progress<double>(f =>
             {
                 var now = Environment.TickCount64;
                 if (f < 1.0 && now - lastApplyMs < 100) return;
                 lastApplyMs = now;
                 item.LoadFraction = f;
+
+                if (f >= 1.0 || now - lastToastMs >= 400)
+                {
+                    lastToastMs = now;
+                    var clamped = Math.Clamp(f, 0.0, 1.0);
+                    var pct = (int)Math.Round(clamped * 100);
+                    Notifications.ShowProgress(loadTag, $"Loading {item.DisplayName}", $"{pct}%", clamped);
+                }
             });
 
             // The per-model context preference (chosen in the details view)
@@ -2177,6 +2193,8 @@ namespace LlamaApp.Views
             {
                 void Rejected()
                 {
+                    _loadToastStartMs.Remove(serverId);
+                    Notifications.Close(loadTag);
                     item.IsLoading = false;
                     item.LoadFraction = 0;
                     // Surface the failure: without this the ring just vanished
@@ -2676,12 +2694,17 @@ namespace LlamaApp.Views
                         if (!item.IsLoaded)
                         {
                             Log.Info("model loaded: " + sm.Id);
-                            // The Chat button jumps straight to the overlay —
-                            // the reason the model was loaded in the first
-                            // place — instead of just opening the flyout.
-                            NotifyWhenHidden("Model ready",
-                                $"{item.DisplayName} is loaded and ready to chat.",
-                                new ToastAction("Chat", ("action", "chat")));
+                            var loadTag = "load:" + sm.Id;
+                            var elapsedMs = _loadToastStartMs.Remove(sm.Id, out var startedMs)
+                                ? Environment.TickCount64 - startedMs
+                                : 0;
+                            var remainingMs = (int)Math.Max(2000 - elapsedMs, 400);
+                            Notifications.ShowProgress(loadTag, $"{item.DisplayName} — Ready", "100%", 1.0);
+                            _ = Task.Run(async () =>
+                            {
+                                await Task.Delay(remainingMs);
+                                Notifications.Close(loadTag);
+                            });
                         }
                         item.IsLoaded = true;
                         item.IsLoading = false;
@@ -2706,6 +2729,11 @@ namespace LlamaApp.Views
                     else if (sm.IsLoading)
                     {
                         if (!item.IsLoading) Log.Info("model loading: " + sm.Id);
+                        if (!_loadToastStartMs.ContainsKey(sm.Id))
+                        {
+                            _loadToastStartMs[sm.Id] = Environment.TickCount64;
+                            Notifications.ShowProgress("load:" + sm.Id, $"Loading {item.DisplayName}", "Loading…", null);
+                        }
                         item.IsLoaded = false;
                         item.IsLoading = true;
                         item.IsDownloading = false;

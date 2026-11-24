@@ -34,23 +34,12 @@
         icons in the header now. The version caption is re-added as the last
         section.
     -->
-    <Window.SystemBackdrop>
-        <MicaBackdrop Kind="Base" />
-    </Window.SystemBackdrop>
-
-    <!-- Esc dismisses the flyout (the same convention as the chat overlay,
-         whose pattern this copies). KeyboardAccelerators live on Control, not
-         Window, so the root Grid is wrapped in a UserControl; window-level
-         accelerators are processed regardless of which element has focus.
-         KeyboardAcceleratorPlacementMode="Hidden": otherwise WinUI shows the
-         accelerator's key ("Esc") as a tooltip when hovering anywhere in the
-         window that has no tooltip of its own. -->
     <UserControl KeyboardAcceleratorPlacementMode="Hidden">
         <UserControl.KeyboardAccelerators>
             <KeyboardAccelerator Key="Escape" Invoked="EscapeAccelerator_Invoked" />
         </UserControl.KeyboardAccelerators>
 
-    <Grid>
+    <Grid Background="{StaticResource BgDeepBrush}">
         <Grid.Resources>
             <!-- Installed model row: icon (running badge on the tile), name,
                  quant chip + params·size in the subtitle line, play glyph or
@@ -130,7 +119,7 @@
                         </Border>
                         <Ellipse Visibility="{x:Bind Model.OpenGlyphVisible, Mode=OneWay}"
                                  Width="12" Height="12"
-                                 Fill="#3FB950"
+                                 Fill="{StaticResource AccentEmeraldBrush}"
                                  Stroke="{ThemeResource ControlFillColorSecondaryBrush}"
                                  StrokeThickness="1.5"
                                  HorizontalAlignment="Right"
@@ -275,7 +264,7 @@
                         <FontIcon Visibility="{x:Bind Model.DownloadFailed, Mode=OneWay}"
                                   Glyph="&#xE7BA;"
                                   FontSize="16"
-                                  Foreground="#F85149"
+                                  Foreground="{StaticResource AccentRoseBrush}"
                                   VerticalAlignment="Center"
                                   Margin="0,0,2,0"
                                   ToolTipService.ToolTip="{x:Bind Model.DownloadFailureTooltip, Mode=OneWay}" />
@@ -302,7 +291,7 @@
                         <FontIcon Visibility="{x:Bind Model.LoadFailed, Mode=OneWay}"
                                   Glyph="&#xE7BA;"
                                   FontSize="16"
-                                  Foreground="#F85149"
+                                  Foreground="{StaticResource AccentRoseBrush}"
                                   VerticalAlignment="Center"
                                   Margin="0,0,2,0"
                                   ToolTipService.ToolTip="{x:Bind Model.LoadFailureTooltip, Mode=OneWay}" />
@@ -367,7 +356,7 @@
                                                    TextWrapping="Wrap" />
                                         <Button Content="Delete"
                                                 Click="LocalModelDeleteConfirm_Click"
-                                                Foreground="#F85149"
+                                                Foreground="{StaticResource AccentRoseBrush}"
                                                 HorizontalAlignment="Right" />
                                     </StackPanel>
                                 </Flyout>
@@ -969,7 +958,7 @@
                                        Width="20" Height="20" />
                         <!-- Presence dot pinned to the bottom-right of the circle -->
                         <Ellipse Width="7" Height="7"
-                                 Fill="#3FB950"
+                                 Fill="{StaticResource AccentEmeraldBrush}"
                                  Stroke="{ThemeResource SolidBackgroundFillColorBaseBrush}"
                                  StrokeThickness="1"
                                  HorizontalAlignment="Right"
