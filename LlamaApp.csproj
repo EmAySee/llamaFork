@@ -160,9 +160,9 @@
              (net10.0) assemblies, so they build as Any CPU even when this WinUI
              app is built for a specific platform (x64/x86/ARM64). The solution
              files map them to Any CPU for platform-specific builds. -->
-        <ProjectReference Include="LlamaApp.Common\LlamaApp.Common.csproj" />
-        <ProjectReference Include="LlamaApp.HuggingFace\LlamaApp.HuggingFace.csproj" />
-        <ProjectReference Include="LlamaApp.LlamaCpp\LlamaApp.LlamaCpp.csproj" />
+        <ProjectReference Include="LlamaApp.Common\LlamaApp.Common.csproj" GlobalPropertiesToRemove="RuntimeIdentifier;SelfContained;Platform" />
+        <ProjectReference Include="LlamaApp.HuggingFace\LlamaApp.HuggingFace.csproj" GlobalPropertiesToRemove="RuntimeIdentifier;SelfContained;Platform" />
+        <ProjectReference Include="LlamaApp.LlamaCpp\LlamaApp.LlamaCpp.csproj" GlobalPropertiesToRemove="RuntimeIdentifier;SelfContained;Platform" />
     </ItemGroup>
 
     <!-- 
