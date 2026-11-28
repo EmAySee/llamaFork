@@ -18,12 +18,9 @@ internal sealed class GlobalHotkey : IDisposable
     private const uint WM_HOTKEY = 0x0312;
     private const int HotkeyId = 0x0001;
 
-    // MOD_ALT + MOD_NOREPEAT, VK_SPACE → Alt+Space (the spotlight convention,
-    // matching PowerToys Run's default). The global registration intercepts it
-    // system-wide, so the Win11 system-menu shortcut is shadowed only while
-    // the app is running.
-    private const uint Modifier = 0x0001 /*MOD_ALT*/ | 0x4000 /*MOD_NOREPEAT*/;
-    private const uint Vk = 0x20; // VK_SPACE
+    // MOD_CONTROL + MOD_ALT + MOD_NOREPEAT, VK_0 → Ctrl+Alt+0.
+    private const uint Modifier = 0x0001 /*MOD_ALT*/ | 0x0002 /*MOD_CONTROL*/ | 0x4000 /*MOD_NOREPEAT*/;
+    private const uint Vk = 0x30; // '0' (VK_0)
 
     private static readonly IntPtr HWND_MESSAGE = new(-3);
 
@@ -38,7 +35,7 @@ internal sealed class GlobalHotkey : IDisposable
 
     /// <summary>
     /// True when the hotkey is live. False after a failed
-    /// <see cref="Register"/> (another app already owns Alt+Space) — the
+    /// <see cref="Register"/> (another app already owns Ctrl+Alt+0) — the
     /// caller surfaces that instead of the shortcut silently doing nothing.
     /// </summary>
     public bool IsRegistered => _registered;
@@ -63,9 +60,9 @@ internal sealed class GlobalHotkey : IDisposable
         _hwnd = CreateMessageOnlyWindow();
         _registered = RegisterHotKey(_hwnd, HotkeyId, Modifier, Vk);
         if (!_registered)
-            Log.Warn("global hotkey registration failed (Alt+Space may already be taken by another app).");
+            Log.Warn("global hotkey registration failed (Ctrl+Alt+0 may already be taken by another app).");
         else
-            Log.Info("global hotkey registered: Alt+Space");
+            Log.Info("global hotkey registered: Ctrl+Alt+0");
     }
 
     public void Dispose()

@@ -300,7 +300,7 @@ namespace LlamaApp
                 Settings.Current.TrayHintShown = true;
                 Settings.Current.Save();
                 Notifications.Show("Llama is running",
-                    "Find it in the system tray — and press Alt+Space anytime to chat with a loaded model.");
+                    "Find it in the system tray — and press Ctrl+Alt+0 anytime to chat with a loaded model.");
             }
 
             Common.Log.Info("startup complete");

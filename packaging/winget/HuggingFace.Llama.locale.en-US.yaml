@@ -12,7 +12,7 @@ ShortDescription: Local LLMs, one click away — right from your Windows system 
 Description: |-
   Llama is a Windows 11 tray app for running llama.cpp models locally — a
   WinUI 3 port of Llama for Mac. Browse and download recommended models from
-  the Hugging Face Hub, chat via the Alt+Space overlay, and keep your models
+  the Hugging Face Hub, chat via the Ctrl+Alt+0 overlay, and keep your models
   in the standard Hugging Face cache. Models run 100% locally — your prompts
   never leave your machine.
 PackageUrl: https://github.com/ggml-org/Llama-Windows

@@ -188,6 +188,11 @@ public sealed class Settings
     public bool LaunchAtStartup { get; set; } = true;
 
     /// <summary>
+    /// Whether the global Ctrl+Alt+0 shortcut for the chat overlay is enabled.
+    /// </summary>
+    public bool EnableChatOverlayHotkey { get; set; } = true;
+
+    /// <summary>
     /// Whether the one-time first-run hint ("Llama lives in the system
     /// tray; Alt+Space opens the chat overlay") has been shown. Persisted so
     /// the toast fires exactly once, on the first launch.

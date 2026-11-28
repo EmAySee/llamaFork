@@ -141,6 +141,7 @@ namespace LlamaApp
             // it via Task Manager > Startup outside this app, so read the real
             // state rather than the persisted preference.
             LaunchAtStartupBox.IsChecked = StartupHelper.IsRegistered();
+            ChatOverlayHotkeyBox.IsChecked = s.EnableChatOverlayHotkey;
             LoadInstallInfo();
         }
 
@@ -607,6 +608,7 @@ namespace LlamaApp
             // next open (LoadCurrent still re-reads the real OS state).
             var wantStartup = LaunchAtStartupBox.IsChecked == true;
             s.LaunchAtStartup = wantStartup;
+            s.EnableChatOverlayHotkey = ChatOverlayHotkeyBox.IsChecked == true;
             try
             {
                 if (wantStartup) StartupHelper.Register();
